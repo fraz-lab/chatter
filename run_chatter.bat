@@ -20,7 +20,7 @@ python -m pip install websockets
 
 REM 4) Run the chat client
 echo Starting chat client...
-python clinet.py
+python client.py
 
 REM 5) Pause so the window stays open after exit
 echo.
