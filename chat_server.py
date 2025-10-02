@@ -2,11 +2,20 @@
 import json
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 import uvicorn
+from pathlib import Path
 
 app = FastAPI()
 
-# hardcoded users
-VALID_USERS = {"admin": "1234", "user": "pass"}
+# Load users from JSON file
+USERS_FILE = Path("users.json")
+
+def load_users():
+    if USERS_FILE.exists():
+        with open(USERS_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+VALID_USERS = load_users()
 
 # track connections
 connections: list[WebSocket] = []
@@ -59,3 +68,6 @@ async def websocket_endpoint(ws: WebSocket):
     except WebSocketDisconnect:
         if ws in connections:
             connections.remove(ws)
+
+if __name__ == "__main__":
+    uvicorn.run("chat_server:app", host="0.0.0.0", port=8000, reload=True)

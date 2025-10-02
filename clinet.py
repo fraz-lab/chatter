@@ -2,16 +2,20 @@ import asyncio
 import json
 import websockets
 import getpass
- 
+from pathlib import Path
+
 from textual.app import App, ComposeResult
 from textual.widgets import Static, TextLog, Input
 from textual.containers import Horizontal, Vertical
 from textual import events
  
-SERVER_WS_URL = "ws://192.168.18.115:8000/ws/chat"
 
-  # Use actual server IP
- 
+CONFIG_FILE = Path("config.json")
+
+with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+    config = json.load(f)
+
+SERVER_WS_URL = f"ws://{config['server']['host']}:{config['server']['port']}/ws/chat"
 class ChatPane(TextLog):
     def __init__(self, thread_key: str):
         super().__init__()
