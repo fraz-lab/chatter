@@ -1,5 +1,12 @@
 # Chatter WebSocket Chat Server
 
+https://github.com/user-attachments/assets/eb5f5c2a-f574-44b3-b979-abc2e05a9d7f
+
+
+https://github.com/user-attachments/assets/06574a90-c440-4b8d-a3c0-ab0e34d51cc7
+
+
+
 A simple **FastAPI WebSocket-based chat server** with **user authentication** from a `users.json` file and basic **chat history** support.
 
 ---
@@ -118,6 +125,10 @@ Run it by double-clicking the file.
    ```
 
 ---
+
+
+
+
 
 ## 📝 Notes
 - Chat history is **stored in memory only** (resets when server restarts).  
