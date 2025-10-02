@@ -1,154 +1,127 @@
-**Chatter – FastAPI WebSocket Chat (with Textual Client)**
+# Chatter WebSocket Chat Server
 
-Chatter is a two-pane chat application built with:
+A simple **FastAPI WebSocket-based chat server** with **user authentication** from a `users.json` file and basic **chat history** support.
 
-FastAPI + WebSockets for the server
+---
 
-Textual (TUI) for the client
+## 📂 Project Structure
 
-JSON configuration for users and server host/port
-
-It’s a simple but extendable example of real-time messaging in Python.
-
-
-📂 Project Structure
+```
 chatter/
-│── server.py        # FastAPI WebSocket server
-│── client.py        # Textual client (two-pane chat)
-│── config.json      # Server & user configuration
-│── run_server.bat   # Windows batch script to start server
-│── run_client.bat   # Windows batch script to start client
-│── README.md        # Documentation
+│
+├── chat_server.py     # Main server script
+├── users.json         # User credentials (JSON file)
+├── run_server.bat     # Windows batch file to start server
+└── README.md
+```
 
-⚙️ Configuration (config.json)
+---
 
-All settings are stored in a JSON file.
+## ⚙️ Setup
 
-Example:
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/chatter.git
+   cd chatter
+   ```
 
+2. **Create and activate a virtual environment**
+   ```bash
+   python -m venv .venv
+   .venv\Scripts\activate    # On Windows
+   source .venv/bin/activate # On Linux/Mac
+   ```
+
+3. **Install dependencies**
+   ```bash
+   pip install fastapi uvicorn
+   ```
+
+---
+
+## 👤 User Authentication
+
+The server uses a `users.json` file for login.  
+Create a `users.json` file in the root directory with the following structure:
+
+```json
 {
-  "server": {
-    "host": "0.0.0.0",
-    "port": 8000
-  },
-  "users": {
-    "admin": "1234",
-    "user": "pass",
-    "alice": "wonderland"
-  }
+  "test1": "pass1",
+  "test2": "pass2"
 }
+```
 
+- **Key** = Username  
+- **Value** = Password
 
-host: Set to 0.0.0.0 to accept connections from all devices on your network.
+You can add as many users as you need.
 
-port: Port number (default: 8000).
+---
 
-users: Dictionary of username: password pairs.
+## 🚀 Run the Server
 
-👉 To add new users, simply edit this file.
+### Option 1: Run with Python
+```bash
+python chat_server.py
+```
 
-🚀 How It Works
+The server will start at:  
+👉 `http://0.0.0.0:8000/ws/chat`
 
-Server (server.py)
+### Option 2: Run with Batch File (Windows)
 
-Reads config.json for valid users and server info.
+Use the provided `run_server.bat` file to quickly start the server.
 
-Accepts WebSocket connections at /ws/chat.
-
-Authenticates with username/password.
-
-Keeps in-memory chat history per thread (test1 and test2).
-
-Broadcasts messages to all other connected clients.
-
-Client (client.py)
-
-Reads config.json to know which server to connect to.
-
-Prompts for username and password.
-
-Opens two chat panes (Test 1 and Test 2).
-
-Messages you send appear locally and are broadcasted to other clients.
-
-Keyboard shortcuts:
-
-TAB → switch between inputs
-
-1 → focus Test 1
-
-2 → focus Test 2
-
-▶️ Running the Project
-1. Install Dependencies
-
-Make sure you are in a virtual environment (.venv) and run:
-
-pip install fastapi uvicorn websockets textual
-
-2. Start the Server
-
-Either run manually:
-
-python server.py
-
-
-Or use the provided run_server.bat:
-
+**run_server.bat**
+```bat
 @echo off
-ECHO Starting Chatter Server...
+ECHO Activating virtual environment...
 CALL .venv\Scripts\activate
-python server.py
+ECHO Starting Chat Server...
+python chat_server.py
 pause
+```
 
-3. Start the Client
+Run it by double-clicking the file.
 
-Run manually:
+---
 
-python client.py
+## 💬 How It Works
 
+1. Client connects to **WebSocket endpoint**:  
+   ```
+   ws://localhost:8000/ws/chat
+   ```
 
-Or use run_client.bat:
+2. The first message must include authentication info:
+   ```json
+   {
+     "username": "test1",
+     "password": "pass1"
+   }
+   ```
 
-@echo off
-ECHO Starting Chatter Client...
-CALL .venv\Scripts\activate
-python client.py
-pause
+   - If credentials are valid → `{ "auth": "ok" }`
+   - If invalid → `{ "error": "invalid credentials" }`
 
-🧪 Example Flow
+3. After login:
+   - The server sends **chat history** to the client.
+   - Any new messages are broadcast to other connected users.
 
-Start the server:
+4. Message format:
+   ```json
+   {
+     "thread": "test1",
+     "message": "Hello World!",
+     "from": "test1"
+   }
+   ```
 
-uvicorn running on http://0.0.0.0:8000
+---
 
+## 📝 Notes
+- Chat history is **stored in memory only** (resets when server restarts).  
+- Multi-user support with authentication.  
+- You can expand it to store chat history in a database if needed.  
 
-Run the client:
-
-Username: admin
-Password: ****
-
-
-Two panes (Test 1, Test 2) open in your terminal.
-
-Start chatting – multiple clients on the same LAN can connect.
-
-✨ Features
-
-✅ Multiple users from config.json
-
-✅ Two chat rooms (test1, test2)
-
-✅ Authentication via JSON config
-
-✅ Real-time broadcasting
-
-✅ Simple .bat scripts for one-click run
-
-🔮 Roadmap
-
-Persistent chat history (save to file/db)
-
-Multiple dynamic chat rooms
-
-Auto-reload config.json without restart
+---
