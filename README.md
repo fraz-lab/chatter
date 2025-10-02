@@ -2,8 +2,7 @@
 
 https://github.com/user-attachments/assets/eb5f5c2a-f574-44b3-b979-abc2e05a9d7f
 
-
-<video src="https://github.com/user-attachments/assets/eb5f5c2a-f574-44b3-b979-abc2e05a9d7f" width="500" controls></video>
+https://github.com/user-attachments/assets/eb5f5c2a-f574-44b3-b979-abc2e05a9d7f" 
 
 
 
